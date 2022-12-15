@@ -1,0 +1,85 @@
+Sub Multiple_year_stock_data():
+ 'Create a script that loops through all the stocks for one year and outputs the following information:
+'The ticker symbol
+'Yearly change from the opening price at the beginning of a given year to the closing price at the end of that year.
+'The percentage change from the opening price at the beginning of a given year to the closing price at the end of that year.
+'The total stock volume of the stock.
+    
+    'I need to set rows for current and tickerand select variables for percent change calcand total volume.
+    
+    For Each ws In Worksheets
+   
+        Dim WorksheetName As String
+        Dim i As Long
+        Dim j As Long
+        Dim TickCount As Long
+        Dim LastRowA As Long
+        Dim LastRowI As Long
+        Dim PerChange As Double
+        Dim GreatIncr As Double
+        Dim GreatDecr As Double
+        Dim GreatVol As Double
+     
+        WorksheetName = ws.Name
+        
+        'I need to create my column headers like shown on the image in module and alo set my values
+        ws.Cells(1, 9).Value = "Ticker"
+        ws.Cells(1, 10).Value = "Yearly Change"
+        ws.Cells(1, 11).Value = "Percent Change"
+        ws.Cells(1, 12).Value = "Total Stock Volume"
+        ws.Cells(1, 16).Value = "Ticker"
+        ws.Cells(1, 17).Value = "Value"
+        ws.Cells(2, 15).Value = "Greatest % Increase"
+        ws.Cells(3, 15).Value = "Greatest % Decrease"
+        ws.Cells(4, 15).Value = "Greatest Total Volume"
+        
+        'Here I need to set ticker to row 1 and start j at row 2. then I need to find last value cell.
+        TickCount = 2
+        j = 2
+        LastRowA = ws.Cells(Rows.Count, 1).End(xlUp).Row
+        
+            'Now I stat my loop. I need to also check if the tickets name changes, do my conditional formatting and write up the yearly change. Make sure I check that colour file to find the red and green
+            For i = 2 To LastRowA
+            
+                If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+                
+                ws.Cells(TickCount, 9).Value = ws.Cells(i, 1).Value
+
+                ws.Cells(TickCount, 10).Value = ws.Cells(i, 6).Value - ws.Cells(j, 3).Value
+              
+                    If ws.Cells(TickCount, 10).Value < 0 Then
+                
+                    ws.Cells(TickCount, 10).Interior.ColorIndex = 3
+                
+                    Else
+                
+
+                    ws.Cells(TickCount, 10).Interior.ColorIndex = 4
+                
+                    End If
+                    
+                    'Need to do my calculating and percent formatting for my if staements
+                    If ws.Cells(j, 3).Value <> 0 Then
+                    PerChange = ((ws.Cells(i, 6).Value - ws.Cells(j, 3).Value) / ws.Cells(j, 3).Value)
+                    
+                    ws.Cells(TickCount, 11).Value = Format(PerChange, "Percent")
+                    
+                    Else
+                    
+                    ws.Cells(TickCount, 11).Value = Format(0, "Percent")
+                    
+                    End If
+                    
+                ws.Cells(TickCount, 12).Value = WorksheetFunction.Sum(Range(ws.Cells(j, 7), ws.Cells(i, 7)))
+                
+                TickCount = TickCount + 1
+                
+                j = i + 1
+                
+                End If
+            
+            Next i
+            
+    Next ws
+        
+End Sub
